@@ -1,32 +1,22 @@
-import http from "http";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-//Configure the smtp transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Function to send email
 async function sendEmail(to, subject, text, html) {
   try {
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL,
+    const response = await resend.emails.send({
+      from: "onboarding@resend.dev", // default sender
       to,
       subject,
-      text,
-      html,
+      html: html || `<p>${text}</p>`
     });
-    return { success: true, messageId: info.messageId };
+
+    return { success: true, messageId: response.id };
+
   } catch (error) {
     console.error("Error sending email:", error);
-    return { success: false, error: error.messsage };
+    return { success: false, error: error.message };
   }
 }
 
-export {sendEmail};
+export { sendEmail };
