@@ -1,14 +1,8 @@
 import { sendEmail } from "./emailService.js";
 
-const sendEmailFun=async({sendTo, subject, text, html})=>{
-    const result = await sendEmail(sendTo, subject, text, html);
-    if(result.success){
-        return true;
-        // res.status(200).json({ message: 'Email sent successfully, messageId: result})
-    } else {
-        return false;
-        // res.status(500).json({ message: 'Failed to send email', error: result.error});
-    }
-}
+const sendEmailFun = async ({ sendTo, subject, html }) => {
+    const result = await sendEmail(sendTo, subject, html);
+    return result.success;
+};
 
 export default sendEmailFun;
